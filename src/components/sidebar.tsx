@@ -1,11 +1,11 @@
+import { routerPath } from "@/constants/routerPath";
+import { SidebarProps } from "@/types/sidebar";
 import { Home, History, Users, LogOut } from "lucide-react";
 import Link from "next/link";
 
-interface SidebarProps {
-  currentPage?: "home" | "history";
-}
-
-export default function Sidebar({ currentPage = "home" }: SidebarProps) {
+export default function Sidebar({
+  currentPage = routerPath.home.title,
+}: SidebarProps) {
   return (
     <div className="w-64 bg-white shadow-sm border-r border-gray-200">
       <div className="p-6">
@@ -15,9 +15,9 @@ export default function Sidebar({ currentPage = "home" }: SidebarProps) {
       <nav className="mt-6">
         <div className="px-3">
           <Link
-            href="/"
+            href={routerPath.home.path}
             className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-              currentPage === "home"
+              currentPage === routerPath.home.title
                 ? "text-gray-900 bg-gray-100"
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             }`}
@@ -27,9 +27,9 @@ export default function Sidebar({ currentPage = "home" }: SidebarProps) {
           </Link>
 
           <Link
-            href="/history"
+            href={routerPath.history.path}
             className={`flex items-center px-3 py-2 mt-1 text-sm font-medium rounded-md ${
-              currentPage === "history"
+              currentPage === routerPath.history.title
                 ? "text-gray-900 bg-gray-100"
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             }`}
