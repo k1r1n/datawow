@@ -17,17 +17,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { formSchema } from "@/lib/schemas/create-concert";
 import { CreateConcertFormProps, FormValues } from "@/types/form";
+import { useConcert } from "@/hook/useConcert";
 
 export default function CreateConcertForm({
   onSuccess,
 }: CreateConcertFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { createConcert, error } = useConcert();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      seats: 500,
+      name: "",
+      seat: 1,
       description: "",
     },
   });
@@ -37,15 +39,15 @@ export default function CreateConcertForm({
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      await createConcert(data);
 
-      console.log("Form submitted:", data);
-
-      if (onSuccess) {
+      if (!error && onSuccess) {
         onSuccess();
       }
 
       form.reset();
-    } catch (error) {
+    } catch (e) {
+      console.error("Error submitting form:", e);
     } finally {
       setIsSubmitting(false);
     }
@@ -60,7 +62,7 @@ export default function CreateConcertForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
-              name="title"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Concert Name</FormLabel>
@@ -74,7 +76,7 @@ export default function CreateConcertForm({
 
             <FormField
               control={form.control}
-              name="seats"
+              name="seat"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Total of seat</FormLabel>

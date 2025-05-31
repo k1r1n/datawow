@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CreateConcertForm from "./create-concert-form";
 import { ConcertCard } from "./concert-card";
 import { useConcert } from "@/hook/useConcert";
 
 export default function ConcertList() {
   const [activeTab, setActiveTab] = useState("overview");
-  const { concerts } = useConcert();
+  const { concerts, fetchConcertsData } = useConcert();
+  const concertList = useMemo(() => concerts, [concerts]);
 
   const handleDeleteClick = () => {};
+
+  const onCreateSuccess = () => {
+    setActiveTab("overview");
+    fetchConcertsData();
+  };
 
   return (
     <div className="bg-white rounded-lg border border-gray-200">
@@ -40,12 +46,12 @@ export default function ConcertList() {
 
       {activeTab === "overview" ? (
         <div className="p-6">
-          {concerts.length === 0 ? (
+          {concertList.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p>No concerts available. Create your first concert!</p>
             </div>
           ) : (
-            concerts.map((concertData) => (
+            concertList.map((concertData) => (
               <ConcertCard
                 key={concertData.id}
                 concert={concertData}
@@ -55,11 +61,7 @@ export default function ConcertList() {
           )}
         </div>
       ) : (
-        <CreateConcertForm
-          onSuccess={() => {
-            setActiveTab("overview");
-          }}
-        />
+        <CreateConcertForm onSuccess={() => onCreateSuccess()} />
       )}
     </div>
   );

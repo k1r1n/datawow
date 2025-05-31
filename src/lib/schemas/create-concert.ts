@@ -1,11 +1,11 @@
 import z from "zod";
 
 export const formSchema = z.object({
-  title: z
+  name: z
     .string()
     .min(3, { message: "Concert name must be at least 3 characters" })
     .max(50, { message: "Concert name must be less than 50 characters" }),
-  seats: z
+  seat: z
     .number()
     .int()
     .min(1, { message: "Must have at least 1 seat" })
