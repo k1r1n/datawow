@@ -26,7 +26,9 @@ export default function StatsCards() {
       <StatCard
         title="Total of seats"
         value={
-          (concerts as { totalSeats: number } | undefined)?.totalSeats ?? 0
+          (
+            concerts as { totalSeats: number } | undefined
+          )?.totalSeats.toLocaleString() ?? 0
         }
         icon={<User className="w-6 h-6" />}
         bgColor="bg-blue-600"

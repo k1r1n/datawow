@@ -72,5 +72,41 @@ export function useConcert() {
     }
   };
 
-  return { concerts, loading, error, createConcert, fetchConcertsData };
+  const deleteConcert = async (id: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await callApi(`/concerts/${id}`, {
+        method: "DELETE",
+      });
+      setConcerts((prev) => ({
+        ...prev,
+        list: prev.list.filter((concert) => concert.id !== id),
+      }));
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err);
+      } else {
+        setError(
+          new Error(
+            String(
+              err?.message ||
+                "An unknown error occurred while deleting the concert."
+            )
+          )
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    concerts,
+    loading,
+    error,
+    createConcert,
+    fetchConcertsData,
+    deleteConcert,
+  };
 }
