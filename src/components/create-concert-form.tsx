@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Save, User } from "lucide-react";
+import { Loader2, Save, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { formSchema } from "@/lib/schemas/create-concert";
 import { CreateConcertFormProps, FormValues } from "@/types/form";
 import { useConcert } from "@/hook/useConcert";
+import { toast } from "sonner";
 
 export default function CreateConcertForm({
   onSuccess,
@@ -43,6 +44,11 @@ export default function CreateConcertForm({
 
       if (!error && onSuccess) {
         onSuccess();
+        toast.success("Concert created", {
+          description: `Successfully created "${
+            data.name
+          }" with ${data.seat.toLocaleString()} seats. Total seats updated.`,
+        });
       }
 
       form.reset();
@@ -82,7 +88,11 @@ export default function CreateConcertForm({
                   <FormLabel>Total of seat</FormLabel>
                   <FormControl>
                     <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <User className="h-4 w-4 text-gray-400" />
+                      </div>
                       <Input
+                        className="pl-8"
                         type="number"
                         placeholder="500"
                         {...field}
@@ -90,9 +100,6 @@ export default function CreateConcertForm({
                           field.onChange(Number.parseInt(e.target.value) || 0)
                         }
                       />
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <User className="h-4 w-4 text-gray-400" />
-                      </div>
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -125,8 +132,17 @@ export default function CreateConcertForm({
               className="bg-blue-500 hover:bg-blue-600"
               disabled={isSubmitting}
             >
-              <Save className="w-4 h-4 mr-2" />
-              Save
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save
+                </>
+              )}
             </Button>
           </div>
         </form>
