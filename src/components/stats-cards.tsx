@@ -2,14 +2,9 @@
 
 import type React from "react";
 import { User, X } from "lucide-react";
-
-interface StatCardProps {
-  title: string;
-  value: string | number;
-  icon: React.ReactNode;
-  bgColor: string;
-  textColor: string;
-}
+import { StatCardProps } from "@/types/stat-card";
+import { useAtom } from "jotai";
+import { concertsAtom } from "@/store/concert";
 
 function StatCard({ title, value, icon, bgColor, textColor }: StatCardProps) {
   return (
@@ -24,11 +19,15 @@ function StatCard({ title, value, icon, bgColor, textColor }: StatCardProps) {
 }
 
 export default function StatsCards() {
+  const [concerts] = useAtom(concertsAtom);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <StatCard
         title="Total of seats"
-        value={500}
+        value={
+          (concerts as { totalSeats: number } | undefined)?.totalSeats ?? 0
+        }
         icon={<User className="w-6 h-6" />}
         bgColor="bg-blue-600"
         textColor="text-white"

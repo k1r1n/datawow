@@ -46,12 +46,12 @@ export default function ConcertList() {
 
       {activeTab === "overview" ? (
         <div className="p-6">
-          {concertList.length === 0 ? (
+          {concertList.totalSeats === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p>No concerts available. Create your first concert!</p>
             </div>
           ) : (
-            concertList.map((concertData) => (
+            concertList.list.map((concertData) => (
               <ConcertCard
                 key={concertData.id}
                 concert={concertData}

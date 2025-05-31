@@ -9,3 +9,8 @@ export interface ConcertCardProps {
   concert: Concert;
   onDelete: () => void;
 }
+
+export interface ConcertList {
+  list: Concert[];
+  totalSeats: number;
+}
