@@ -1,8 +1,8 @@
 export interface Concert {
   id: number;
-  title: string;
+  name: string;
   description: string;
-  seats: number;
+  seat: number;
 }
 
 export interface ConcertCardProps {

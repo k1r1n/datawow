@@ -1,48 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { User, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import CreateConcertForm from "./create-concert-form";
-import { ConcertCardProps } from "@/types/concert-list";
-
-function ConcertCard({ concert, onDelete }: ConcertCardProps) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
-      <h3 className="text-lg font-medium text-blue-600 mb-4">
-        {concert.title}
-      </h3>
-      <p className="text-gray-600 text-sm leading-relaxed mb-6">
-        {concert.description}
-      </p>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center text-gray-600">
-          <User className="w-4 h-4 mr-2" />
-          <span className="text-sm font-medium">
-            {concert.seats.toLocaleString()}
-          </span>
-        </div>
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={onDelete}
-          className="bg-red-500 hover:bg-red-600"
-        >
-          <Trash2 className="w-4 h-4 mr-2" />
-          Delete
-        </Button>
-      </div>
-    </div>
-  );
-}
+import { ConcertCard } from "./concert-card";
+import { useConcert } from "@/hook/useConcert";
 
 export default function ConcertList() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [concerts] = useState([]);
+  const { concerts } = useConcert();
 
   const handleDeleteClick = () => {};
-
-  const handleConfirmDelete = () => {};
 
   return (
     <div className="bg-white rounded-lg border border-gray-200">
@@ -78,10 +45,10 @@ export default function ConcertList() {
               <p>No concerts available. Create your first concert!</p>
             </div>
           ) : (
-            concerts.map((concert) => (
+            concerts.map((concertData) => (
               <ConcertCard
-                key={concert.id}
-                concert={concert}
+                key={concertData.id}
+                concert={concertData}
                 onDelete={() => handleDeleteClick()}
               />
             ))
