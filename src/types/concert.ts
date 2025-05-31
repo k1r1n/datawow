@@ -8,6 +8,7 @@ export interface Concert {
 export interface ConcertCardProps {
   concert: Concert;
   onDelete: () => void;
+  onReserve: () => void;
 }
 
 export interface ConcertList {

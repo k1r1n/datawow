@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSetAtom } from "jotai";
 import callApi from "@/lib/api";
-import { Concert, ConcertList } from "@/types/concert-list";
+import { Concert, ConcertList } from "@/types/concert";
 import { concertsAtom } from "@/store/concert";
 
 export function useConcert() {
