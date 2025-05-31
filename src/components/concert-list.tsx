@@ -4,13 +4,18 @@ import { useMemo, useState } from "react";
 import CreateConcertForm from "./create-concert-form";
 import { ConcertCard } from "./concert-card";
 import { useConcert } from "@/hook/useConcert";
+import { toast } from "sonner";
 
 export default function ConcertList() {
   const [activeTab, setActiveTab] = useState("overview");
-  const { concerts, fetchConcertsData } = useConcert();
+  const { concerts, fetchConcertsData, deleteConcert } = useConcert();
   const concertList = useMemo(() => concerts, [concerts]);
 
-  const handleDeleteClick = () => {};
+  const handleDeleteClick = async (id: string) => {
+    await deleteConcert(id);
+    await fetchConcertsData();
+    toast.success("Concert deleted");
+  };
 
   const onCreateSuccess = () => {
     setActiveTab("overview");
@@ -55,7 +60,7 @@ export default function ConcertList() {
               <ConcertCard
                 key={concertData.id}
                 concert={concertData}
-                onDelete={() => handleDeleteClick()}
+                onDelete={() => handleDeleteClick(concertData.id)}
               />
             ))
           )}

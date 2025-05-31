@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSetAtom } from "jotai";
 import callApi from "@/lib/api";
 import { Concert, ConcertList } from "@/types/concert-list";
-import { concertsAtom } from "@/store/concert"; // Changed 'concerts' to 'atoms'
+import { concertsAtom } from "@/store/concert";
 
 export function useConcert() {
   const [concerts, setConcerts] = useState<ConcertList>({
@@ -52,8 +52,14 @@ export function useConcert() {
         method: "POST",
         data: JSON.stringify(newConcert),
       });
-      setConcerts((prev) => [...prev, response.data]);
-      setConcertsAtom((prev) => [...prev, response.data]);
+      setConcerts((prev) => ({
+        ...prev,
+        list: [...prev.list, response.data],
+      }));
+      setConcertsAtom((prev) => ({
+        ...prev,
+        list: [...prev.list, response.data],
+      }));
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err);
@@ -81,7 +87,11 @@ export function useConcert() {
       });
       setConcerts((prev) => ({
         ...prev,
-        list: prev.list.filter((concert) => concert.id !== id),
+        list: prev.list.filter((concert) => concert.id !== Number(id)),
+      }));
+      setConcertsAtom((prev) => ({
+        ...prev,
+        list: prev.list.filter((concert) => concert.id !== Number(id)),
       }));
     } catch (err: unknown) {
       if (err instanceof Error) {
