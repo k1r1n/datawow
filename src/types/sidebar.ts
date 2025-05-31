@@ -1,3 +1,7 @@
 export interface SidebarProps {
-  currentPage?: "home" | "history";
+  currentPage: CurrentPage;
+  userRole: UserRole;
 }
+
+export type UserRole = "admin" | "user";
+export type CurrentPage = "admin" | "history";

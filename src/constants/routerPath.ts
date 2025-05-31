@@ -1,10 +1,14 @@
 export const routerPath = {
-  home: {
+  admin: {
     title: "home",
-    path: "/",
+    path: "/admin",
   },
   history: {
     title: "history",
-    path: "/history",
+    path: "/admin/history",
+  },
+  user: {
+    title: "user",
+    path: "/user",
   },
 };
