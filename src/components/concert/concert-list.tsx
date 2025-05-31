@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import CreateConcertForm from "@/components/concert/create-concert-form";
-import { ConcertCard } from "@/components/concert/concert-card";
+import { ConcertCard } from "./concert-card";
 import { useConcert } from "@/hook/useConcert";
 import { toast } from "sonner";
 
