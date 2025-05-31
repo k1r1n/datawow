@@ -1,12 +1,12 @@
 import StatsCards from "@/components/stats-cards";
-import ConcertList from "@/components/concert/concert-list";
 import Layout from "@/components/layout";
+import ConcertPage from "@/components/concert/concert-page";
 
-export default function Dashboard() {
+export default function AdminPage() {
   return (
     <Layout>
       <StatsCards />
-      <ConcertList />
+      <ConcertPage />
     </Layout>
   );
 }

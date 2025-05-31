@@ -1,9 +1,10 @@
+import { ConcertList } from "@/components/concert/concert-list";
 import Layout from "@/components/layout";
 
-export default function Dashboard() {
+export default function UserPage() {
   return (
     <Layout>
-      <div>User</div>
+      <ConcertList />
     </Layout>
   );
 }

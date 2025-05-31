@@ -20,9 +20,7 @@ import { CreateConcertFormProps, FormValues } from "@/types/form";
 import { useConcert } from "@/hook/useConcert";
 import { toast } from "sonner";
 
-export default function CreateConcertForm({
-  onSuccess,
-}: CreateConcertFormProps) {
+export function CreateConcertForm({ onSuccess }: CreateConcertFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { createConcert, error } = useConcert();
 
