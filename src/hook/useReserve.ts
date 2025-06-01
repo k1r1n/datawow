@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import callApi from "@/lib/api";
 import { Reserve } from "@/types/reserve";
 
@@ -38,5 +38,10 @@ export function useReserve() {
     [setLoading, setError]
   );
 
-  return { reserveConcert, loading, error };
+  const getReservations = useCallback(async (userId: string) => {
+    const response = await callApi(`/reservations/${userId}`);
+    return response;
+  }, []);
+
+  return { reserveConcert, getReservations, loading, error };
 }

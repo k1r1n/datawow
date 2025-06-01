@@ -32,6 +32,7 @@ export function ConcertList() {
       ) : (
         concertList.list.map((concertData) => (
           <ConcertCard
+            permission="admin"
             key={concertData.id}
             concert={concertData}
             onDelete={() => handleDeleteClick(concertData.id)}

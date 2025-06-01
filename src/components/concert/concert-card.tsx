@@ -1,13 +1,16 @@
 import { ConcertCardProps } from "@/types/concert";
 import { User, Trash2, Ticket, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { userAtom } from "@/store/user";
-import { useAtomValue } from "jotai";
 import { role } from "@/constants/role";
 
-function ConcertCard({ concert, onDelete, onReserve }: ConcertCardProps) {
-  const user = useAtomValue(userAtom);
-  console.log(concert);
+function ConcertCard({
+  permission,
+  concert,
+  onDelete,
+  onReserve,
+  isReservedByCurrentUser,
+  isProcessing,
+}: ConcertCardProps) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
       <h3 className="text-lg font-medium text-blue-600 mb-4">
@@ -24,7 +27,7 @@ function ConcertCard({ concert, onDelete, onReserve }: ConcertCardProps) {
           </span>
         </div>
         <div>
-          {user.role === role.admin && (
+          {permission === role.admin && (
             <Button
               variant="destructive"
               size="sm"
@@ -35,26 +38,30 @@ function ConcertCard({ concert, onDelete, onReserve }: ConcertCardProps) {
               Delete
             </Button>
           )}
-          {user.role === role.user && (
+          {permission === role.user && (
             <>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={onDelete}
-                className="bg-red-500 hover:bg-red-600"
-              >
-                <X className="w-4 h-4 mr-2" />
-                Cancel
-              </Button>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={onReserve}
-                className="bg-blue-500 hover:bg-blue-600"
-              >
-                <Ticket className="w-4 h-4 mr-2" />
-                Reserve
-              </Button>
+              {isReservedByCurrentUser ? (
+                <Button
+                  disabled={isProcessing}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out disabled:opacity-50" // Cancel button
+                >
+                  <X className="w-4 h-4" />
+                  {isProcessing ? "Cancelling..." : "Cancel Reserve"}
+                </Button>
+              ) : concert.seat > 0 ? (
+                <Button
+                  onClick={onReserve}
+                  disabled={isProcessing}
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out disabled:opacity-50" // Reserve button
+                >
+                  <Ticket className="w-4 h-4" />
+                  {isProcessing ? "Reserving..." : "Reserve Seat"}
+                </Button>
+              ) : (
+                <p className="text-center text-gray-500 font-semibold py-2 px-4 rounded bg-gray-100">
+                  Sold Out
+                </p>
+              )}
             </>
           )}
         </div>

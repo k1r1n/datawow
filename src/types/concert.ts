@@ -6,9 +6,13 @@ export interface Concert {
 }
 
 export interface ConcertCardProps {
+  permission: "admin" | "user";
+  isReservedByCurrentUser?: boolean;
+  isProcessing?: boolean;
   concert: Concert;
-  onDelete: () => void;
-  onReserve: () => void;
+  onDelete?: () => void;
+  onReserve?: () => void;
+  onCancel?: () => void;
 }
 
 export interface ConcertList {
