@@ -12,25 +12,18 @@ export default function UserPage() {
   const { concerts, fetchConcertsData } = useConcert();
   const { getReservations } = useReserve();
   const [userActiveReservations, setUserActiveReservations] = useState([]);
-  const [loadingConcerts, setLoadingConcerts] = useState<boolean>(true);
-  const [loadingReservations, setLoadingReservations] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null); // concertId for action
 
   const fetchData = useCallback(async () => {
-    setLoadingConcerts(true);
-    setLoadingReservations(true);
     setError(null);
     try {
       const reservationsData = await getReservations(MOCK_CURRENT_USER.id);
 
-      setUserActiveReservations(reservationsData.data || []);
+      setUserActiveReservations(reservationsData.list || []);
     } catch (err: any) {
       setError(err.message || "Failed to load data.");
       console.error(err);
-    } finally {
-      setLoadingConcerts(false);
-      setLoadingReservations(false);
     }
   }, []);
 

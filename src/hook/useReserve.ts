@@ -40,7 +40,12 @@ export function useReserve() {
 
   const getReservations = useCallback(async (userId: string) => {
     const response = await callApi(`/reservations/${userId}`);
-    return response;
+
+    if (response.success) {
+      return response.data;
+    }
+
+    throw new Error(response.message);
   }, []);
 
   return { reserveConcert, getReservations, loading, error };
