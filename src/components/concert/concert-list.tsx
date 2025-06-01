@@ -6,20 +6,29 @@ import { useConcert } from "@/hook/useConcert";
 import { toast } from "sonner";
 import { useReserve } from "@/hook/useReserve";
 import { MOCK_CURRENT_USER } from "@/constants/mockUser";
+import DeleteConfirmationDialog from "@/components/delete-confirm-dialog";
+import { Concert } from "@/types/concert";
 
 export function ConcertList() {
   const { concerts, fetchConcertsData, deleteConcert } = useConcert();
   const { reserveConcert } = useReserve();
   const concertList = useMemo(() => concerts, [concerts]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [concertToDelete, setConcertToDelete] = useState<Concert | null>(null);
 
-  const handleDeleteClick = async (id: string) => {
+  const handleDeleteClick = async (concert: Concert) => {
+    setConcertToDelete(concert);
     setShowDeleteDialog(true);
   };
 
-  const confirmDeleteConcert = async (id: string) => {
+  const confirmDeleteConcert = async () => {
     try {
-      await deleteConcert(id);
+      if (!concertToDelete) {
+        toast.error("No concert to delete");
+        return;
+      }
+
+      await deleteConcert(concertToDelete.id);
     } catch (err: any) {
       console.error("Delete operation failed:", err);
     } finally {
@@ -46,11 +55,18 @@ export function ConcertList() {
             permission="admin"
             key={concertData.id}
             concert={concertData}
-            onDelete={() => handleDeleteClick(concertData.id)}
+            onDelete={() => handleDeleteClick(concertData)}
             onReserve={() => handleReserveClick(concertData.id)}
           />
         ))
       )}
+
+      <DeleteConfirmationDialog
+        isOpen={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={confirmDeleteConcert}
+        itemName={concertToDelete?.name || ""}
+      />
     </div>
   );
 }
