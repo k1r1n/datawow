@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import callApi from "@/lib/api";
 import { Reserve } from "@/types/reserve";
 
@@ -48,5 +48,47 @@ export function useReserve() {
     throw new Error(response.message);
   }, []);
 
-  return { reserveConcert, getReservations, loading, error };
+  const cancelReservation = useCallback(
+    async (reservationId: string, userId: string) => {
+      const response = await callApi(
+        `/reservations/${reservationId}?userId=${userId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      return response;
+    },
+    []
+  );
+
+  const getAllReservations = useCallback(async () => {
+    const response = await callApi(`/reservations/all`);
+
+    if (response.success) {
+      return response.data.total;
+    }
+
+    throw new Error(response.message);
+  }, []);
+
+  const getCancelledReservations = useCallback(async () => {
+    const response = await callApi(`/reservations/cancelled`);
+
+    if (response.success) {
+      return response.data.total;
+    }
+
+    throw new Error(response.message);
+  }, []);
+
+  return {
+    reserveConcert,
+    getReservations,
+    cancelReservation,
+    getAllReservations,
+    getCancelledReservations,
+    loading,
+    error,
+  };
 }

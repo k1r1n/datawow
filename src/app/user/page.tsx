@@ -10,7 +10,7 @@ import { MOCK_CURRENT_USER } from "@/constants/mockUser";
 
 export default function UserPage() {
   const { concerts, fetchConcertsData } = useConcert();
-  const { getReservations } = useReserve();
+  const { getReservations, cancelReservation } = useReserve();
   const [userActiveReservations, setUserActiveReservations] = useState([]);
   const [error, setError] = useState<string | null>(null);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null); // concertId for action
@@ -50,6 +50,21 @@ export default function UserPage() {
     }
   };
 
+  const handleCancel = async (reservationId: string) => {
+    setActionInProgress(reservationId);
+    setError(null);
+    try {
+      await cancelReservation(reservationId, MOCK_CURRENT_USER.id);
+      await fetchData();
+      await fetchConcertsData();
+    } catch (err: any) {
+      setError(err.message || `Failed to cancel reservation.`);
+      console.error(err);
+    } finally {
+      setActionInProgress(null);
+    }
+  };
+
   return (
     <Layout>
       <div className="container mx-auto p-4 max-w-3xl">
@@ -63,12 +78,14 @@ export default function UserPage() {
             );
             const isReservedByCurrentUser = !!userReservationForThisConcert;
             const isProcessing = actionInProgress === concert.id;
+            const reservation = userActiveReservations[0] as { id: string };
 
             return (
               <ConcertCard
                 permission="user"
                 key={concert.id}
                 concert={concert}
+                onCancel={() => handleCancel(reservation.id)}
                 onReserve={() => handleReserve(concert.id)}
                 isReservedByCurrentUser={isReservedByCurrentUser}
                 isProcessing={isProcessing}
