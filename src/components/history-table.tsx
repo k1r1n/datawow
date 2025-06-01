@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,32 +9,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-interface HistoryEntry {
-  id: number;
-  dateTime: string;
-  username: string;
-  concertName: string;
-  action: "Cancel" | "Reserve" | "Create" | "Delete";
-}
+import { useReserve } from "@/hook/useReserve";
+import { HistoryEntry } from "@/types/history";
 
 export default function HistoryTable() {
-  const [historyData, setHistoryData] = useState<HistoryEntry[]>([
-    {
-      id: 1,
-      dateTime: "12/09/2024 15:00:00",
-      username: "Sara John",
-      concertName: "The festival Int 2024",
-      action: "Cancel",
-    },
-    {
-      id: 2,
-      dateTime: "12/09/2024 10:39:20",
-      username: "Sara John",
-      concertName: "The festival Int 2024",
-      action: "Reserve",
-    },
-  ]);
+  const { getHistoryReservations } = useReserve();
+  const [historyData, setHistoryData] = useState<HistoryEntry[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getHistoryReservations();
+
+      setHistoryData(data.list);
+    })();
+  }, [getHistoryReservations]);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200">
@@ -42,7 +30,6 @@ export default function HistoryTable() {
         <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">
           History
         </h1>
-
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -65,10 +52,10 @@ export default function HistoryTable() {
               {historyData.map((entry) => (
                 <TableRow key={entry.id}>
                   <TableCell className="text-gray-600 text-xs sm:text-sm">
-                    {entry.dateTime}
+                    {new Date(entry.timestamp).toLocaleString()}
                   </TableCell>
                   <TableCell className="text-gray-600 text-xs sm:text-sm">
-                    {entry.username}
+                    {entry.userName}
                   </TableCell>
                   <TableCell className="text-gray-600 text-xs sm:text-sm">
                     {entry.concertName}
@@ -76,11 +63,9 @@ export default function HistoryTable() {
                   <TableCell className="text-gray-600 text-xs sm:text-sm">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        entry.action === "Create"
-                          ? "bg-blue-100 text-blue-800"
-                          : entry.action === "Delete"
+                        entry.action === "cancelled"
                           ? "bg-red-100 text-red-800"
-                          : entry.action === "Reserve"
+                          : entry.action === "reserved"
                           ? "bg-green-100 text-green-800"
                           : "bg-orange-100 text-orange-800"
                       }`}

@@ -1,24 +1,35 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ConcertCard } from "./concert-card";
 import { useConcert } from "@/hook/useConcert";
 import { toast } from "sonner";
 import { useReserve } from "@/hook/useReserve";
+import { MOCK_CURRENT_USER } from "@/constants/mockUser";
 
 export function ConcertList() {
   const { concerts, fetchConcertsData, deleteConcert } = useConcert();
   const { reserveConcert } = useReserve();
   const concertList = useMemo(() => concerts, [concerts]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleDeleteClick = async (id: string) => {
-    await deleteConcert(id);
-    await fetchConcertsData();
-    toast.success("Concert deleted");
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDeleteConcert = async (id: string) => {
+    try {
+      await deleteConcert(id);
+    } catch (err: any) {
+      console.error("Delete operation failed:", err);
+    } finally {
+      await fetchConcertsData();
+      toast.success("Concert deleted");
+    }
   };
 
   const handleReserveClick = async (id: string) => {
-    await reserveConcert({ concertId: id, userId: "user.id" });
+    await reserveConcert({ concertId: id, userId: MOCK_CURRENT_USER.name });
     await fetchConcertsData();
     toast.success("Concert reserved");
   };

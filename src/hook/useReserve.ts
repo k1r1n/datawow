@@ -39,7 +39,7 @@ export function useReserve() {
   );
 
   const getReservations = useCallback(async (userId: string) => {
-    const response = await callApi(`/reservations/${userId}`);
+    const response = await callApi(`/reservations/user/${userId}`);
 
     if (response.success) {
       return response.data;
@@ -82,11 +82,22 @@ export function useReserve() {
     throw new Error(response.message);
   }, []);
 
+  const getHistoryReservations = useCallback(async () => {
+    const response = await callApi(`/reservations/history`);
+
+    if (response.success) {
+      return response.data;
+    }
+
+    throw new Error(response.message);
+  }, []);
+
   return {
     reserveConcert,
     getReservations,
     cancelReservation,
     getAllReservations,
+    getHistoryReservations,
     getCancelledReservations,
     loading,
     error,
